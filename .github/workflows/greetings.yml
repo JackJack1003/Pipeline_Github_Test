@@ -14,10 +14,15 @@ jobs:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         issue-message: "Message that will be displayed on users' first issue"
         pr-message: "Message that will be displayed on users' first pull request"
-  comment:
-      runs-on: ubuntu-latest
-
-      steps:
-      - uses: ben-z/actions-comment-on-issue@1.0.2
+  add-comment:
+    if: github.event.label.name == 'help-wanted'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Add comment
+        uses: peter-evans/create-or-update-comment@a35cf36e5301d70b76f316e867e7788a55a31dae
         with:
-          message: "Gentle reminder:\n* Did you go through all of the troubleshooting steps outlined in README.md?"
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            This issue is available for anyone to work on. **Make sure to reference this issue in your pull request.** :sparkles: Thank you for your contribution! :sparkles:
